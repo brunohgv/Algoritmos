@@ -59,14 +59,15 @@ void teste(int* vet, int n){
 // Retorna: Valor máximo do vetor
 int max_rec(int* A, int p, int r)
 {
-	int result, x, y;
 	if(p == r)
 	{
 		return A[p];
 	}
 	else
 	{
+		int result, x, y;
 		int q = (p + r) / 2;
+		
 		x =  max_rec(A, p, q);
 		y = max_rec(A, q+1 , r);
 		
@@ -76,6 +77,108 @@ int max_rec(int* A, int p, int r)
 	}
 }
 
+// Algoritmo recursivo mergesort
+// Método: Divisão e conquista
+// Retorna: Vetor ordenado de forma crescente
+// Créditos: geeksforgeeks.org
+void merge(int arr[], int l, int m, int r)
+{
+    int i, j, k;
+    int n1 = m - l + 1;
+    int n2 =  r - m;
+ 
+    /* create temp arrays */
+    int L[n1], R[n2];
+ 
+    /* Copy data to temp arrays L[] and R[] */
+    for (i = 0; i < n1; i++)
+        L[i] = arr[l + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[m + 1+ j];
+ 
+    /* Merge the temp arrays back into arr[l..r]*/
+    i = 0; // Initial index of first subarray
+    j = 0; // Initial index of second subarray
+    k = l; // Initial index of merged subarray
+    while (i < n1 && j < n2)
+    {
+        if (L[i] <= R[j])
+        {
+            arr[k] = L[i];
+            i++;
+        }
+        else
+        {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+ 
+    /* Copy the remaining elements of L[], if there
+       are any */
+    while (i < n1)
+    {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+ 
+    /* Copy the remaining elements of R[], if there
+       are any */
+    while (j < n2)
+    {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+ 
+/* l is for left index and r is right index of the
+   sub-array of arr to be sorted */
+void mergeSort(int arr[], int l, int r)
+{
+    if (l < r)
+    {
+        // Same as (l+r)/2, but avoids overflow for
+        // large l and h
+        int m = l+(r-l)/2;
+ 
+        // Sort first and second halves
+        mergeSort(arr, l, m);
+        mergeSort(arr, m+1, r);
+ 
+        merge(arr, l, m, r);
+    }
+}
+
+// Algoritmo iterativo
+// Retorna: Vetor ordenado de forma crescente
+void cresc_it(int* A, int p, int n)
+{
+	if(p == n)
+	{
+		return A[p];
+	}
+	else
+	{
+		int i, j, aux;
+		for(j = 0 ; j <= n ; j++)
+		{
+			for(i = 1 ; i <= n ; i++)
+			{	
+				if(A[i] < A[i-1])
+				{
+					aux = A[i];
+					A[i] = A[i-1];
+					A[i-1] = aux;
+				}
+			}	
+		}
+		
+		
+	}
+}
 
 main()
 {
@@ -95,13 +198,18 @@ main()
 	
 	int maximo;
 	
-	maximo = max_rec(vet, 0, n-1);
+	maximo = max_rec(vet, 0, n-1);	
 	
 	teste(vet, n);
 	
-	printf("Maximo valor rec: %i\n", maximo);
-	printf("Maximo valor it: %i\n", max);
-	printf("Count: %i", COUNT);	
+	//printf("Maximo valor rec: %i\n", maximo);
+	//printf("Maximo valor it: %i\n", max);
+	//printf("Count: %i", COUNT);	
+	
+	cresc_it(vet, 0, n-1);
+	//mergeSort(vet, 0, n-1);
+	
+	teste(vet, n);
 }
 
 

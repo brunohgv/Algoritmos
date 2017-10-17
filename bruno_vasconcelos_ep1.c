@@ -31,63 +31,63 @@ int* vetor(int n)
 }
 
 
-//Algorítmo adaptado do Minicurso de Análise de algoritmos de Feofiloff
-//cap 5.3 SOLIDEZII
-//Objetivo do algoritmo: Encontrar o maior valor em um vetor de inteiros
-int max_rec(int* A, int p, int r){
-	if(p==r){
+//Algoritmo recursivo para encontrar o maior valor em um vetor de inteiros
+int max_rec(int* A, int p, int r)
+{
+	int result, x, y, x1, x2, y1, y2;
+	x = 0;
+	y = 0;
+	if(p == r)
+	{
 		return A[p];
-		COUNT++;
-	}else{
-		int q = (p+r)/2;
-		int x1 = max_rec(A, p, q);
-		COUNT++;
-		int x2 = max_rec(A, q+1, r);
-		COUNT++;
-		int y1;
-		int s;
-		int y2;
-		s = A[q];
-		y1 = s;;
-		int i,j;
-		for(i = q - 1 ; i > p ; q--){
-			s += A[i];
-			if(s>y1){
-				y1 = s;	
-			} 	
-		}
-		s = A[q+1];
-		y2 = s;
-		for(j = q + 2 ; j < r ; j++){
-			s += A[j];
-			if(s > y2){
-				y2 = s;
+	}
+	else
+	{
+		int q = (p + r) / 2;
+		x1 =  max_rec(A, p, q);
+		x2 = max_rec(A, q + 1 , r);
+		int i, j;
+		for(i = q - 1 ; i > p ; i--)
+		{
+			if(A[i] > x)
+			{
+				x = A[i];
 			}
 		}
-		return max(max(x1, y1+y2), x2);
+		for(j = q ; j < r ; j ++)
+		{
+			if(A[j] > y)
+			{
+				y = A[j];
+			}
+		}
+		result = max( x , y );
+		
+		return result;		
 	}
 }
 
 // algoritmo iterativo para receber maior valor do vetor A
 // Criado por Bruno Henrique Gusmão Vasconcelos
-int max_it(int A[], int tamA){
+int max_it(int* A, int tamA){
 	int i;
-	int max;
-	if(tamA == 1){
-		return A[tamA];
-	} else {
-		for(i = 1 ; i < tamA ; i++){
-		if(A[i] > A[i - 1]){
+	int max = A[0];
+	for(i = 0 ; i < tamA ; i++)
+	{
+		if(A[i] > max)
+		{
 			max = A[i];
 		}
 	}
 	return max;
-	}
 }
 
-//Preencher vetor de inteiros
-int preencher(int A[], int r){
-
+//Função para 
+void teste(int* vet, int n){
+	int i;
+	for(i=0;i<n;i++){
+		printf("pos %i : %i\n", i, vet[i]);
+	}
 }
 
 
@@ -96,27 +96,26 @@ main()
 	srand(time(NULL));
 	
 	int i;
-	int *vet;
+	int* vet;
 	
 	
 	//tamanho do vetor
-	int n = 20;
+	int n = 10;
 	
 	
 	vet = vetor(n);
 	
-	max_rec(vet, 0, n);
+	int max = max_it(vet, n);
 	
+	int maximo;
 	
-	/*
-	for(i=0;i<n;i++){
-		printf("pos %i : %i\n", i, vet[i]);
-	}
-	*/
+	maximo = max_rec(vet, 0, n);
 	
-	printf("Count: %i", COUNT);
+	teste(vet, n);
 	
-	
+	printf("Maximo valor: %i\n", maximo);
+	printf("Maximo valor it: %i\n", max);
+	printf("Count: %i", COUNT);	
 }
 
 

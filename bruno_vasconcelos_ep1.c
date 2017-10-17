@@ -180,6 +180,37 @@ void cresc_it(int* A, int p, int n)
 	}
 }
 
+
+// Algoritmo recursivo
+// Método: Divisão e conquista
+// Retorna: Posição do número buscado ou primeiro menor que ele
+int buscabinaria(int* a, int p, int r, int x)
+{
+	if(p == r-1) //se o índice de início do intervalo for igual ao índice do final retorne esse índice
+	{
+		return r;
+	}
+	else
+	{
+		int q = (p + r) / 2; //divisão do intervalo em duas pertes
+		if(a[q] < x)
+		{
+			return buscabinaria(a, q, r, x); //Se 'a' for menor que o valor desejado, procure valores maiores
+		}
+		else
+		{
+			return buscabinaria(a, p, q, x); //Se 'a' for maior que o valor desejado, procure valores menores
+		}
+	}
+}	
+
+//Função principal da busca binária
+int loc_rec(int* a, int n, int x)
+{
+	return buscabinaria(a, 0, n+1, x);
+}
+
+
 main()
 {
 	srand(time(NULL));
@@ -210,6 +241,8 @@ main()
 	//mergeSort(vet, 0, n-1);
 	
 	teste(vet, n);
+	
+	printf("Resultado: %i", loc_rec(vet, n, 50));
 }
 
 

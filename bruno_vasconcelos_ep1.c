@@ -31,44 +31,8 @@ int* vetor(int n)
 }
 
 
-//Algoritmo recursivo para encontrar o maior valor em um vetor de inteiros
-int max_rec(int* A, int p, int r)
-{
-	int result, x, y, x1, x2, y1, y2;
-	x = 0;
-	y = 0;
-	if(p == r)
-	{
-		return A[p];
-	}
-	else
-	{
-		int q = (p + r) / 2;
-		x1 =  max_rec(A, p, q);
-		x2 = max_rec(A, q + 1 , r);
-		int i, j;
-		for(i = q - 1 ; i > p ; i--)
-		{
-			if(A[i] > x)
-			{
-				x = A[i];
-			}
-		}
-		for(j = q ; j < r ; j ++)
-		{
-			if(A[j] > y)
-			{
-				y = A[j];
-			}
-		}
-		result = max( x , y );
-		
-		return result;		
-	}
-}
-
-// algoritmo iterativo para receber maior valor do vetor A
-// Criado por Bruno Henrique Gusmão Vasconcelos
+// Algoritmo iterativo
+// Retorna: maior valor do vetor A
 int max_it(int* A, int tamA){
 	int i;
 	int max = A[0];
@@ -82,11 +46,33 @@ int max_it(int* A, int tamA){
 	return max;
 }
 
-//Função para 
+// Função para imprimir no console o vetor de inteiros
 void teste(int* vet, int n){
 	int i;
 	for(i=0;i<n;i++){
 		printf("pos %i : %i\n", i, vet[i]);
+	}
+}
+
+// Algoritmo recursivo
+// Método: Divisão e conquista
+// Retorna: Valor máximo do vetor
+int max_rec(int* A, int p, int r)
+{
+	int result, x, y;
+	if(p == r)
+	{
+		return A[p];
+	}
+	else
+	{
+		int q = (p + r) / 2;
+		x =  max_rec(A, p, q);
+		y = max_rec(A, q+1 , r);
+		
+		result = max( x , y );
+		
+		return result;		
 	}
 }
 
@@ -109,11 +95,11 @@ main()
 	
 	int maximo;
 	
-	maximo = max_rec(vet, 0, n);
+	maximo = max_rec(vet, 0, n-1);
 	
 	teste(vet, n);
 	
-	printf("Maximo valor: %i\n", maximo);
+	printf("Maximo valor rec: %i\n", maximo);
 	printf("Maximo valor it: %i\n", max);
 	printf("Count: %i", COUNT);	
 }

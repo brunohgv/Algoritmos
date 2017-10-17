@@ -184,6 +184,7 @@ void cresc_it(int* A, int p, int n)
 // Algoritmo recursivo
 // Método: Divisão e conquista
 // Retorna: Posição do número buscado ou primeiro menor que ele
+// Créditos: Paulo Feofiloff (Analise de busca binária)
 int buscabinaria(int* a, int p, int r, int x)
 {
 	if(p == r-1) //se o índice de início do intervalo for igual ao índice do final retorne esse índice
@@ -209,6 +210,32 @@ int loc_rec(int* a, int n, int x)
 {
 	return buscabinaria(a, 0, n+1, x);
 }
+
+
+
+// Algoritmo iterativo
+// Retorna: Posição do número buscado ou primeiro maior que ele
+// Créditos: Paulo Feofiloff (Analise de busca binária)
+int loc_it(int* a, int n, int x)
+{
+	int p = 0;
+	int r = n - 1;
+	while(p < r - 1)
+	{
+		int q = (p + r) / 2;
+		if(a[q] < x)
+		{
+			p = q;
+		}
+		else
+		{
+			r = q;
+		}
+	}
+	return r;
+}
+
+
 
 
 main()
@@ -242,7 +269,7 @@ main()
 	
 	teste(vet, n);
 	
-	printf("Resultado: %i", loc_rec(vet, n, 50));
+	printf("Resultado: %i", loc_it(vet, n, 50));
 }
 
 

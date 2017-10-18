@@ -174,7 +174,7 @@ void cresc_it(int* A, int p, int n)
 
 // Algoritmo recursivo
 // Método: Divisão e conquista
-// Retorna: Posição do número buscado ou primeiro menor que ele
+// Retorna: Posição do número buscado 'x' ou primeiro menor que ele
 // Créditos: Paulo Feofiloff (Analise de busca binária)
 int buscabinaria(int* a, int p, int r, int x)
 {
@@ -205,7 +205,7 @@ int loc_rec(int* a, int n, int x)
 
 
 // Algoritmo iterativo
-// Retorna: Posição do número buscado ou primeiro maior que ele
+// Retorna: Posição do número buscado 'x' ou primeiro maior que ele
 // Créditos: Paulo Feofiloff (Analise de busca binária)
 int loc_it(int* a, int n, int x)
 {
@@ -226,7 +226,9 @@ int loc_it(int* a, int n, int x)
 	return r;
 }
 
-
+//Algoritmo iterativo
+//Retorna: A maior soma sequencial do vetor informado no intervalo [p , r]
+//Créditos: Paulo Feofiloff (SOLIDEZI)
 int seg_it(int* a, int p, int r)
 {
 	int x = a[r];	//x recebe última posição do vetor 'a'
@@ -248,37 +250,10 @@ int seg_it(int* a, int p, int r)
 	return x;
 }
 
-/*
-
-SOLIDEZII (A, p, r)
-1 se p = r
-2 então devolva A[p]
-3 senão q ? b(p + r)/2c
-4 x
-0 ? SOLIDEZII (A, p, q)
-5 x
-00 ? SOLIDEZII (A, q + 1, r)
-6 y
-0 ? s ? A[q]
-7 para i ? q - 1 decrescendo até p faça
-8 s ? A[i] + s
-9 se s > y0
-então y
-0 ? s
-10 y
-00 ? s ? A[q + 1]
-11 para j ? q + 2 até r faça
-12 s ? s + A[j]
-13 se s > y00 então y
-00 ? s
-14 x ? max (x
-0
-, y0 + y
-00, x00)
-15 devolva x
-
-*/
-
+//Algoritmo recursivo
+//Método: Divisão e conquista
+//Retorna: A maior soma sequencial do vetor informado no intervalo [p , r]
+//Créditos: Paulo Feofiloff (SOLIDEZII)
 seg_rec(int* a, int p, int r)
 {
 	if(p == r)
@@ -290,7 +265,7 @@ seg_rec(int* a, int p, int r)
 		int x1, x2;
 		int q = (p + r) / 2;
 		x1 = seg_rec(a, p, q);
-		x2 = seg_rec(a, q, r);
+		x2 = seg_rec(a, q+1, r);
 		int s = a[q];
 		int y1 = s;
 		int i;
@@ -349,9 +324,11 @@ main()
 	
 	//teste(vet, n);
 	
-	printf("Maior segmento: %i\n", seg_it(vet, 0, n - 1));
+	//printf("Maior segmento recursivo: %i\n", seg_rec(vet, 0, n));
 	
-	printf("Resultado: %i", loc_it(vet, n, 50));
+	//printf("Maior segmento iterativo: %i\n", seg_it(vet, 0, n - 1));
+	
+	//printf("Resultado: %i", loc_it(vet, n, 50));
 }
 
 

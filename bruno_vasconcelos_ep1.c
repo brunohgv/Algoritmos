@@ -24,7 +24,7 @@ int* vetor(int n)
 	int i;
 	for(i = 0; i < n ; i++)
 	{
-		v[i] = rand()%100;
+		v[i] = rand()%201 - 100;
 	}
  	
  	return v;
@@ -156,27 +156,18 @@ void mergeSort(int arr[], int l, int r)
 // Retorna: Vetor ordenado de forma crescente
 void cresc_it(int* A, int p, int n)
 {
-	if(p == n)
+	int i, j, aux;
+	for(j = 0 ; j <= n ; j++)
 	{
-		return A[p];
-	}
-	else
-	{
-		int i, j, aux;
-		for(j = 0 ; j <= n ; j++)
-		{
-			for(i = 1 ; i <= n ; i++)
-			{	
-				if(A[i] < A[i-1])
-				{
-					aux = A[i];
-					A[i] = A[i-1];
-					A[i-1] = aux;
-				}
-			}	
-		}
-		
-		
+		for(i = 1 ; i <= n ; i++)
+		{	
+			if(A[i] < A[i-1])
+			{
+				aux = A[i];
+				A[i] = A[i-1];
+				A[i-1] = aux;
+			}
+		}	
 	}
 }
 
@@ -236,7 +227,96 @@ int loc_it(int* a, int n, int x)
 }
 
 
+int seg_it(int* a, int p, int r)
+{
+	int x = a[r];	//x recebe última posição do vetor 'a'
+	int q;
+	int s;
+	int j;
+	for(q = r - 1 ; q >= p ; q--)	//enquanto 'q' for maior que 'p' (início do segmento)
+	{
+		s = 0;
+		for(j = q ; j <= r ; j++)	//percorre o vetor somando os segmentos
+		{
+			s = s + a[j];
+			if(s > x)				//se a soma desse segmento for maior que a soma anterior
+			{
+				x = s;				//a variável 'x' recebe o valor da soma
+			}
+		}
+	}
+	return x;
+}
 
+/*
+
+SOLIDEZII (A, p, r)
+1 se p = r
+2 então devolva A[p]
+3 senão q ? b(p + r)/2c
+4 x
+0 ? SOLIDEZII (A, p, q)
+5 x
+00 ? SOLIDEZII (A, q + 1, r)
+6 y
+0 ? s ? A[q]
+7 para i ? q - 1 decrescendo até p faça
+8 s ? A[i] + s
+9 se s > y0
+então y
+0 ? s
+10 y
+00 ? s ? A[q + 1]
+11 para j ? q + 2 até r faça
+12 s ? s + A[j]
+13 se s > y00 então y
+00 ? s
+14 x ? max (x
+0
+, y0 + y
+00, x00)
+15 devolva x
+
+*/
+
+seg_rec(int* a, int p, int r)
+{
+	if(p == r)
+	{
+		return a[p];
+	}
+	else
+	{
+		int x1, x2;
+		int q = (p + r) / 2;
+		x1 = seg_rec(a, p, q);
+		x2 = seg_rec(a, q, r);
+		int s = a[q];
+		int y1 = s;
+		int i;
+		for(i = q - 1 ; i > p ; i--)
+		{
+			s += a[i];
+			if(s > y1)
+			{
+				y1 = s;
+			}
+		}
+		s = a[q+1];
+		int y2 = s;
+		int j;
+		for(j = q + 2 ; j < r ; j++)
+		{
+			s += a[j];
+			if(s > y2)
+			{
+				y2 = s;
+			}
+		}
+		int x = max(max(x1 , y1 + y2), x2);
+		return x;
+	}
+}
 
 main()
 {
@@ -264,10 +344,12 @@ main()
 	//printf("Maximo valor it: %i\n", max);
 	//printf("Count: %i", COUNT);	
 	
-	cresc_it(vet, 0, n-1);
+	//cresc_it(vet, 0, n-1);
 	//mergeSort(vet, 0, n-1);
 	
-	teste(vet, n);
+	//teste(vet, n);
+	
+	printf("Maior segmento: %i\n", seg_it(vet, 0, n - 1));
 	
 	printf("Resultado: %i", loc_it(vet, n, 50));
 }

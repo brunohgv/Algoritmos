@@ -27,7 +27,7 @@ int* vetor(int n)
 		v[i] = rand()%201 - 100;
 	}
  	
- 	return v;
+	return v;	
 }
 
 
@@ -36,14 +36,18 @@ int* vetor(int n)
 int max_it(int* A, int tamA){
 	int i;
 	int max = A[0];
+
 	for(i = 0 ; i < tamA ; i++)
 	{
+		COUNT++;
 		if(A[i] > max)
 		{
+			COUNT++;
 			max = A[i];
 		}
 	}
-	return max;
+
+	return max;	
 }
 
 // Função para imprimir no console o vetor de inteiros
@@ -61,6 +65,7 @@ int max_rec(int* A, int p, int r)
 {
 	if(p == r)
 	{
+		COUNT++;
 		return A[p];
 	}
 	else
@@ -69,10 +74,12 @@ int max_rec(int* A, int p, int r)
 		int q = (p + r) / 2;
 		
 		x =  max_rec(A, p, q);
+		COUNT++;
 		y = max_rec(A, q+1 , r);
+		COUNT++;
 		
 		result = max( x , y );
-		
+			
 		return result;		
 	}
 }
@@ -136,7 +143,7 @@ void merge(int arr[], int l, int m, int r)
  
 /* l is for left index and r is right index of the
    sub-array of arr to be sorted */
-void mergeSort(int arr[], int l, int r)
+void cresc_rec(int arr[], int l, int r)
 {
     if (l < r)
     {
@@ -145,10 +152,13 @@ void mergeSort(int arr[], int l, int r)
         int m = l+(r-l)/2;
  
         // Sort first and second halves
-        mergeSort(arr, l, m);
-        mergeSort(arr, m+1, r);
- 
+        cresc_rec(arr, l, m);
+        COUNT++;
+        cresc_rec(arr, m+1, r);
+ 		COUNT++;
+ 		
         merge(arr, l, m, r);
+        COUNT++;
     }
 }
 
@@ -159,8 +169,10 @@ void cresc_it(int* A, int p, int n)
 	int i, j, aux;
 	for(j = 0 ; j <= n ; j++)
 	{
+		COUNT++;
 		for(i = 1 ; i <= n ; i++)
 		{	
+			COUNT++;
 			if(A[i] < A[i-1])
 			{
 				aux = A[i];
@@ -180,6 +192,7 @@ int buscabinaria(int* a, int p, int r, int x)
 {
 	if(p == r-1) //se o índice de início do intervalo for igual ao índice do final retorne esse índice
 	{
+		COUNT++;
 		return r;
 	}
 	else
@@ -187,10 +200,12 @@ int buscabinaria(int* a, int p, int r, int x)
 		int q = (p + r) / 2; //divisão do intervalo em duas pertes
 		if(a[q] < x)
 		{
+			COUNT++;
 			return buscabinaria(a, q, r, x); //Se 'a' for menor que o valor desejado, procure valores maiores
 		}
 		else
 		{
+			COUNT++;
 			return buscabinaria(a, p, q, x); //Se 'a' for maior que o valor desejado, procure valores menores
 		}
 	}
@@ -213,6 +228,7 @@ int loc_it(int* a, int n, int x)
 	int r = n - 1;
 	while(p < r - 1)
 	{
+		COUNT++;
 		int q = (p + r) / 2;
 		if(a[q] < x)
 		{
@@ -237,9 +253,11 @@ int seg_it(int* a, int p, int r)
 	int j;
 	for(q = r - 1 ; q >= p ; q--)	//enquanto 'q' for maior que 'p' (início do segmento)
 	{
+		COUNT++;
 		s = 0;
 		for(j = q ; j <= r ; j++)	//percorre o vetor somando os segmentos
 		{
+			COUNT++;
 			s = s + a[j];
 			if(s > x)				//se a soma desse segmento for maior que a soma anterior
 			{
@@ -254,7 +272,7 @@ int seg_it(int* a, int p, int r)
 //Método: Divisão e conquista
 //Retorna: A maior soma sequencial do vetor informado no intervalo [p , r]
 //Créditos: Paulo Feofiloff (SOLIDEZII)
-seg_rec(int* a, int p, int r)
+int seg_rec(int* a, int p, int r)
 {
 	if(p == r)
 	{
@@ -264,8 +282,13 @@ seg_rec(int* a, int p, int r)
 	{
 		int x1, x2;
 		int q = (p + r) / 2;
+		
 		x1 = seg_rec(a, p, q);
+		COUNT++;
+		
 		x2 = seg_rec(a, q+1, r);
+		COUNT++;
+		
 		int s = a[q];
 		int y1 = s;
 		int i;
@@ -293,6 +316,192 @@ seg_rec(int* a, int p, int r)
 	}
 }
 
+//Arquiva resultados max_rec
+void arquiva_max_rec(int *vet)
+{
+	COUNT = 0;
+	FILE *arq;
+	
+	arq = fopen("valores_max_rec.txt", "w");
+	int i, n;
+	//atribuição dos valores para o arquivo
+	for(i = 0 ; i <= 200 ; i++)
+	{
+		n = i * 200;
+		vet = vetor(n);
+		max_rec(vet, 0, n);
+		fprintf(arq, "%i\t%i\n", n, COUNT);
+		COUNT = 0;
+	}
+
+	fclose(arq);	
+}
+
+//arquiva resultados max_it
+void arquiva_max_it(int *vet)
+{
+	COUNT = 0;
+	FILE *arq;
+	
+	arq = fopen("valores_max_it.txt", "w");
+	int i, n;
+	//atribuição dos valores para o arquivo
+	for(i = 0 ; i <= 200 ; i++)
+	{
+		n = i * 200;
+		vet = vetor(n);
+		max_it(vet, n);
+		fprintf(arq, "%i\t%i\n", n, COUNT);
+		COUNT = 0;
+	}
+
+	fclose(arq);	
+}
+
+//arquiva resultados cresc_it
+void arquiva_cresc_it(int *vet)
+{
+	COUNT = 0;
+	FILE *arq;
+	
+	arq = fopen("valores_cresc_it.txt", "w");
+	int i, n;
+	//atribuição dos valores para o arquivo
+	for(i = 0 ; i <= 200 ; i++)
+	{
+		printf("%i", i);
+		n = i * 100;
+		vet = vetor(n);
+		cresc_it(vet, 0, n);
+		fprintf(arq, "%i\t%i\n", n, COUNT);
+		COUNT = 0;
+	}
+
+	fclose(arq);	
+}
+
+//arquiva resultados cresc_rec
+void arquiva_cresc_rec(int *vet)
+{
+	COUNT = 0;
+	FILE *arq;
+	
+	arq = fopen("valores_cresc_rec.txt", "w");
+	int i, n;
+	//atribuição dos valores para o arquivo
+	for(i = 0 ; i <= 200 ; i++)
+	{
+		printf("%i", i);
+		n = i * 100;
+		vet = vetor(n);
+		cresc_rec(vet, 0, n);
+		fprintf(arq, "%i\t%i\n", n, COUNT);
+		COUNT = 0;
+	}
+
+	fclose(arq);	
+}
+
+void arquiva_loc_rec(int *vet)
+{
+	COUNT = 0;
+	FILE *arq;
+	
+	arq = fopen("valores_loc_rec.txt", "w");
+	int i, n;
+	//atribuição dos valores para o arquivo
+	for(i = 0 ; i <= 200 ; i++)
+	{
+		printf("%i", i);
+		n = i * 300;
+		vet = vetor(n);
+		cresc_rec(vet, 0, n);
+		COUNT = 0;
+		loc_rec(vet, n, rand()%201 - 100);
+		fprintf(arq, "%i\t%i\n", n, COUNT);
+	}
+
+	fclose(arq);	
+}
+
+void arquiva_loc_it(int *vet)
+{
+	COUNT = 0;
+	FILE *arq;
+	
+	arq = fopen("valores_loc_it.txt", "w");
+	int i, n;
+	//atribuição dos valores para o arquivo
+	for(i = 0 ; i <= 200 ; i++)
+	{
+		printf("%i", i);
+		n = i * 300;
+		vet = vetor(n);
+		cresc_rec(vet, 0, n);
+		COUNT = 0;
+		loc_it(vet, n, rand()%201 - 100);
+		fprintf(arq, "%i\t%i\n", n, COUNT);
+	}
+
+	fclose(arq);	
+}
+
+void arquiva_seg_it(int *vet)
+{
+	COUNT = 0;
+	FILE *arq;
+	
+	arq = fopen("valores_seg_it.txt", "w");
+	int i, n;
+	//atribuição dos valores para o arquivo
+	for(i = 0 ; i <= 200 ; i++)
+	{
+		printf("%i", i);
+		n = i * 200;
+		vet = vetor(n);
+		seg_it(vet, 0, n);
+		fprintf(arq, "%i\t%i\n", n, COUNT);
+		COUNT = 0;
+	}
+
+	fclose(arq);	
+}
+
+void arquiva_seg_rec(int *vet)
+{
+	COUNT = 0;
+	FILE *arq;
+	
+	arq = fopen("valores_seg_rec.txt", "w");
+	int i, n;
+	//atribuição dos valores para o arquivo
+	for(i = 0 ; i <= 200 ; i++)
+	{
+		printf("%i", i);
+		n = i * 200;
+		vet = vetor(n);
+		seg_rec(vet, 0, n);
+		fprintf(arq, "%i\t%i\n", n, COUNT);
+		COUNT = 0;
+	}
+
+	fclose(arq);	
+}
+
+
+//Arquiva os dados te todas as funções
+void arquivaTudo(int* vet)
+{
+	arquiva_cresc_it(vet);
+	arquiva_cresc_rec(vet);
+	arquiva_loc_it(vet);
+	arquiva_loc_rec(vet);
+	arquiva_max_it(vet);
+	arquiva_max_rec(vet);
+	arquiva_seg_it(vet);
+	arquiva_seg_rec(vet);
+}
+
 main()
 {
 	srand(time(NULL));
@@ -300,35 +509,9 @@ main()
 	int i;
 	int* vet;
 	
-	
-	//tamanho do vetor
-	int n = 10;
+	arquivaTudo(vet);
 	
 	
-	vet = vetor(n);
-	
-	int max = max_it(vet, n);
-	
-	int maximo;
-	
-	maximo = max_rec(vet, 0, n-1);	
-	
-	teste(vet, n);
-	
-	//printf("Maximo valor rec: %i\n", maximo);
-	//printf("Maximo valor it: %i\n", max);
-	//printf("Count: %i", COUNT);	
-	
-	//cresc_it(vet, 0, n-1);
-	//mergeSort(vet, 0, n-1);
-	
-	//teste(vet, n);
-	
-	//printf("Maior segmento recursivo: %i\n", seg_rec(vet, 0, n));
-	
-	//printf("Maior segmento iterativo: %i\n", seg_it(vet, 0, n - 1));
-	
-	//printf("Resultado: %i", loc_it(vet, n, 50));
 }
 
 

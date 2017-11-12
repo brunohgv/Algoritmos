@@ -2,8 +2,14 @@
 #include<stdlib.h>
 #include<locale.h>
 #include<time.h>
+#include<math.h>
 
-//arquiva resultados max_it
+typedef struct{
+	int x;
+	int y;
+}Ponto;
+
+//Lê arquivo
 int lerArquivo(int* x, int* y, int retorno)
 {
 	FILE *arq;
@@ -43,47 +49,53 @@ int lerArquivo(int* x, int* y, int retorno)
 	}
 }
 
-void heap(int* x, int n, int i){
+void heap(Ponto* ponto, int n, int i){
 	int indiceMaiorValor = i;
 	int esquerda = 2*i + 1;
 	int direita = 2*i + 2;
 	
 	//verifica se o índice está dentro do limite do vetor e o substitui se o valor da esquerda for maior
-	if (esquerda < n && x[esquerda] > x[i]){
+	if (esquerda < n && ponto[esquerda].x > ponto[indiceMaiorValor].x){
 		indiceMaiorValor = esquerda;
 	}
 	
 	//verifica se o índice está dentro do limite do vetor e o substitui se o valor da direita for maior
-	if (direita < n && x[direita] > x[i]){
+	if (direita < n && ponto[direita].x > ponto[indiceMaiorValor].x){
 		indiceMaiorValor = direita;
 	}
 	
 	//trocar posição x[i] com x[indiceMaiorValor] se ele já não for
 	if (indiceMaiorValor != i){
-		int auxiliar = x[i];
-		x[i] = x[indiceMaiorValor];
-		x[indiceMaiorValor] = auxiliar;
-		heap(x, n, indiceMaiorValor);
+		int auxiliarX = ponto[i].x;
+		int auxiliarY = ponto[i].y;
+		ponto[i].x = ponto[indiceMaiorValor].x;
+		ponto[i].y = ponto[indiceMaiorValor].y;
+		ponto[indiceMaiorValor].x = auxiliarX;
+		ponto[indiceMaiorValor].y = auxiliarY;
+		heap(ponto, n, indiceMaiorValor);
 	}
 }
 
-void heapsort(int* x, int n){
+void heapsort(Ponto* ponto, int n){
 	//reorganiza
 	int i;
 	for(i = (n/2 - 1); i >= 0 ; i--){
-		heap(x, n, i);
+		heap(ponto, n, i);
 	}	
 	
 	//extrai os elementos do heap a cada reorganização;
-	int auxiliar;
+	int auxiliarX, auxiliarY;
 	for(i = n - 1 ; i >= 0; i--){
 		//move a raiz do heap para o fim do segmento atual do vetor 
-		auxiliar = x[i];
-		x[i] = x[0];
-		x[0] = auxiliar;
+		auxiliarX = ponto[i].x;
+		auxiliarY = ponto[i].y;
+		ponto[i].x = ponto[0].x;
+		ponto[i].y = ponto[0].y;
+		ponto[0].x = auxiliarX;
+		ponto[0].y = auxiliarY;
 		
 		//chama a função novamente no segmento reduzido
-		heap(x, i, 0);	
+		heap(ponto, i, 0);	
 	}
 }
 
@@ -93,6 +105,36 @@ void imprimirVetor(int* vet, int n){
 	{
 		printf("%i ", vet[i]);
 	}
+}
+
+void imprimirStruct(Ponto* ponto, int n){
+	int i;
+	for(i = 0 ; i < n ; i++){
+		printf("%i ", ponto[i].x);
+	}
+	printf("\n");
+	for(i = 0 ; i < n ; i++){
+		printf("%i ", ponto[i].y);
+	}
+	
+}
+
+void criarStruct(int* x, int* y, Ponto* ponto, int n){
+	int i;
+	for(i = 0 ; i < n ; i++){
+		ponto[i].x = x[i];
+		ponto[i].y = y[i];
+	}
+}
+
+float calcularDistancia(Ponto p1, Ponto p2){
+	int x = p1.x - p2.x;
+	int y = p1.y - p2.y;
+	
+	// (x^2 + y^2)^(1/2)
+	float total = sqrt(pow(x, 2) + pow(y, 2));
+	
+	return total;
 }
 
 
@@ -108,8 +150,18 @@ main()
 	x = lerArquivo(x, y, 1);
 	y = lerArquivo(x, y, 2);
 	
+	Ponto ponto[n];
 	
-	imprimirVetor(x, n);
+	criarStruct(x, y, ponto, n);
+	
+	imprimirStruct(ponto, n);
+	
+	heapsort(ponto, n);
+	printf("\n\n");
+	imprimirStruct(ponto , n);
+		
+	
+	
 	
 	system("pause");
 }

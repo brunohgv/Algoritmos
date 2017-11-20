@@ -49,7 +49,7 @@ int lerArquivo(int* x, int* y, int retorno)
 	}
 }
 
-void heap(Ponto* ponto, int n, int i){
+void heapX(Ponto* ponto, int n, int i){
 	int indiceMaiorValor = i;
 	int esquerda = 2*i + 1;
 	int direita = 2*i + 2;
@@ -72,15 +72,18 @@ void heap(Ponto* ponto, int n, int i){
 		ponto[i].y = ponto[indiceMaiorValor].y;
 		ponto[indiceMaiorValor].x = auxiliarX;
 		ponto[indiceMaiorValor].y = auxiliarY;
-		heap(ponto, n, indiceMaiorValor);
+		heapX(ponto, n, indiceMaiorValor);
 	}
 }
 
-void heapsort(Ponto* ponto, int n){
+// Ordena o vetor de pontos pela coordenada x
+// Recebe: Vetor de pontos a serem ordenados e número de variáveis
+// Retorna: Vetor de pontos ordenado pela coordenada x 
+void heapsortX(Ponto* ponto, int n){
 	//reorganiza
 	int i;
 	for(i = (n/2 - 1); i >= 0 ; i--){
-		heap(ponto, n, i);
+		heapX(ponto, n, i);
 	}	
 	
 	//extrai os elementos do heap a cada reorganização;
@@ -95,10 +98,79 @@ void heapsort(Ponto* ponto, int n){
 		ponto[0].y = auxiliarY;
 		
 		//chama a função novamente no segmento reduzido
-		heap(ponto, i, 0);	
+		heapX(ponto, i, 0);	
 	}
 }
 
+void heapY(Ponto* ponto, int n, int i){
+	int indiceMaiorValor = i;
+	int esquerda = 2*i + 1;
+	int direita = 2*i + 2;
+	
+	//verifica se o índice está dentro do limite do vetor e o substitui se o valor da esquerda for maior
+	if (esquerda < n && ponto[esquerda].y > ponto[indiceMaiorValor].y){
+		indiceMaiorValor = esquerda;
+	}
+	
+	//verifica se o índice está dentro do limite do vetor e o substitui se o valor da direita for maior
+	if (direita < n && ponto[direita].y > ponto[indiceMaiorValor].y){
+		indiceMaiorValor = direita;
+	}
+	
+	//trocar posição x[i] com x[indiceMaiorValor] se ele já não for
+	if (indiceMaiorValor != i){
+		int auxiliarY = ponto[i].y;
+		int auxiliarX = ponto[i].x;
+		ponto[i].y = ponto[indiceMaiorValor].y;
+		ponto[i].x = ponto[indiceMaiorValor].x;
+		ponto[indiceMaiorValor].y = auxiliarY;
+		ponto[indiceMaiorValor].x = auxiliarX;
+		heapY(ponto, n, indiceMaiorValor);
+	}
+}
+
+
+// Ordena o vetor de pontos pela coordenada y
+// Recebe: Vetor de pontos a serem ordenados e número de variáveis
+// Retorna: Vetor de pontos ordenado pela coordenada y
+void heapsortY(Ponto* ponto, int n){
+	//reorganiza
+	int i;
+	for(i = (n/2 - 1); i >= 0 ; i--){
+		heapY(ponto, n, i);
+	}	
+	
+	//extrai os elementos do heap a cada reorganização;
+	int auxiliarX, auxiliarY;
+	for(i = n - 1 ; i >= 0; i--){
+		//move a raiz do heap para o fim do segmento atual do vetor 
+		auxiliarX = ponto[i].x;
+		auxiliarY = ponto[i].y;
+		ponto[i].y = ponto[0].y;
+		ponto[i].x = ponto[0].x;
+		ponto[0].x = auxiliarX;
+		ponto[0].y = auxiliarY;
+		
+		//chama a função novamente no segmento reduzido
+		heapY(ponto, i, 0);	
+	}
+}
+
+//Calcula distância entre dois pontos
+// recebe: duas estruturas Ponto
+// retorna: Distância entre eles
+float calcularDistancia(Ponto p1, Ponto p2){
+	int x = p1.x - p2.x;
+	int y = p1.y - p2.y;
+	
+	// (x^2 + y^2)^(1/2)
+	float total = sqrt(pow(x, 2) + pow(y, 2));
+	
+	return total;
+}
+
+// imprime vetor vet de n espaços
+// recebe: vetor e número de espaços do vetor
 void imprimirVetor(int* vet, int n){
 	int i;
 	for(i = 0 ; i < n ; i++)
@@ -127,15 +199,38 @@ void criarStruct(int* x, int* y, Ponto* ponto, int n){
 	}
 }
 
-float calcularDistancia(Ponto p1, Ponto p2){
-	int x = p1.x - p2.x;
-	int y = p1.y - p2.y;
-	
-	// (x^2 + y^2)^(1/2)
-	float total = sqrt(pow(x, 2) + pow(y, 2));
-	
-	return total;
+// Entrada: vetor de pontos, tamanho do vetor
+// Saída: menor distância entre dois pontos do vetor
+float distanciaMinimaForcaBruta(Ponto* ponto, int n){
+	float distancia = 9999999;
+	int i, j;
+	for(i = 2 ; i < n ; i++){
+		for(j = 1 ; j < i - 1; j++){
+			if (calcularDistancia(ponto[i], ponto[j]) < distancia){
+				distancia = calcularDistancia(ponto[i], ponto[j]);
+			}
+		}
+	}
+	return distancia;
 }
+
+/*
+// Entrada: vetor de Pontos, índice inicial, índice final
+// Saída: menor distância entre dois pontos da coleção
+float distanciaMinima(Ponto* ponto, int p, int r){
+	if(r <= p+2){
+		//resolver diretamente
+	}
+	else{
+		int q;
+		q = (p + r) / 2;
+		float dE = distanciaMinima(ponto, p, q);
+		float dD = distanciaMinima(ponto, q + 1, r);
+		return combinar(ponto, p, r, dE, dD);
+	}
+}
+*/
+
 
 
 main()
@@ -156,12 +251,17 @@ main()
 	
 	imprimirStruct(ponto, n);
 	
-	heapsort(ponto, n);
+	heapsortX(ponto, n);
+	printf("\n\n");
+	imprimirStruct(ponto , n);
+	heapsortY(ponto, n);
 	printf("\n\n");
 	imprimirStruct(ponto , n);
 		
+	float distanciaMinima = 1;
 	
-	
+	distanciaMinima = distanciaMinimaForcaBruta(ponto, n);
+	printf("\n\nDistancia minima: %f", distanciaMinima);
 	
 	system("pause");
 }
